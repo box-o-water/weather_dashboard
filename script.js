@@ -1,7 +1,14 @@
+// TODO: figure out how to set this up with a new key as a secret in github or something
 const key = '163a9b550e5a84d073437283547bd3e1'
 var searchCity = ""
+
+
+// askbcs: these vars here were temporarily set to something to test returning vals from api
+// i either want them set to nothing, or not create them here (most likely), but in the getCurrent function
 var lat = 44.979530
 var lon = -93.235190
+
+
 var lang = 'en'
 var units = 'imperial'
 
@@ -78,12 +85,20 @@ function getCurrent() {
         .then(function (data) {
             console.log(data)
             var someCity = data.name;
+
+
+
+            // askbcs: here is where i want to initially define lat and lon,
+            // or just update the values based on the searched city if defined globally
+            // this does seem to be updating the values from the searched city
             lat = data.coord.lat;
             lon = data.coord.lon;
-            temp = data.main.temp;
-
             console.log(lat)
             console.log(lon)
+
+
+
+            temp = data.main.temp;
 
                 var listItem = document.createElement("li");
                 listItem.textContent = someCity;
@@ -105,13 +120,23 @@ function getCurrent() {
         .catch(function (error){
             console.log(error)
         })
+
+
+        // askbcs: i want the new lat and lon values to be available in the getForecast function
+        // tried `return [lat,lon]` and other things
+
 };
 
+
+// askbcs: i want call this function only after the searched city has updated the lat and lon values in getCurrent
+// and i want those updated lat and lon values to be available in this function
+// i don't currently have any of my attempts for returning/passing values/calling this function in here, as none were working
 function getForecast() {
     console.log("getForecast")
 
     var forecast = document.getElementById("forecast")
 
+    // askbcs: here is where i need to use the updated lat and lon values
     var requestUrl= `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&lang=${lang}&units=${units}`;
 
     fetch(requestUrl)
@@ -143,7 +168,12 @@ function getForecast() {
 };
 
 function init() {
+    // eventually not call this until the submit button is pressed, to get rid of some console errors
     getCurrent()
+
+
+    // askbcs: i don't really want to call getForecast right away
+    // i want to wait to call this only after the searched city has updated the lat and lon values
     getForecast()
 }
 
