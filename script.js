@@ -5,8 +5,8 @@ var searchCity = ""
 
 // askbcs: these vars here were temporarily set to something to test returning vals from api
 // i either want them set to nothing, or not create them here (most likely), but in the getCurrent function
-var lat = 44.979530
-var lon = -93.235190
+// var lat = 44.979530
+// var lon = -93.235190
 
 
 var lang = 'en'
@@ -91,8 +91,8 @@ function getCurrent() {
             // askbcs: here is where i want to initially define lat and lon,
             // or just update the values based on the searched city if defined globally
             // this does seem to be updating the values from the searched city
-            lat = data.coord.lat;
-            lon = data.coord.lon;
+            var { lat } = data.coord.lat;
+            var { lon } = data.coord.lon;
             console.log(lat)
             console.log(lon)
 
@@ -124,6 +124,7 @@ function getCurrent() {
 
         // askbcs: i want the new lat and lon values to be available in the getForecast function
         // tried `return [lat,lon]` and other things
+        getForecast(lat, lon)
 
 };
 
@@ -131,7 +132,7 @@ function getCurrent() {
 // askbcs: i want call this function only after the searched city has updated the lat and lon values in getCurrent
 // and i want those updated lat and lon values to be available in this function
 // i don't currently have any of my attempts for returning/passing values/calling this function in here, as none were working
-function getForecast() {
+function getForecast(lat, lon) {
     console.log("getForecast")
 
     var forecast = document.getElementById("forecast")
@@ -153,7 +154,8 @@ function getForecast() {
 
                 listItem.textContent = new Date(data.list[i].dt*1000) + " " + "temp: " + data.list[i].main.temp;
 
-                // when have limited to 5 days and not 5 3-hour sections, to convert to yyyy-mm-dd
+                // TODO figure out how to grab 5 days, not 5 3-hour windows
+                // when have limited, use similar to convert to yyyy-mm-dd or look into using dayjs
                 // var date = new Date(someArray[i].dt*1000);
                 // listItem.textContent = date.toISOString().split('T')[0]
 
@@ -168,13 +170,13 @@ function getForecast() {
 };
 
 function init() {
-    // eventually not call this until the submit button is pressed, to get rid of some console errors
+    // TODO eventually not call this until the submit button is pressed, to get rid of some console errors
     getCurrent()
 
 
     // askbcs: i don't really want to call getForecast right away
     // i want to wait to call this only after the searched city has updated the lat and lon values
-    getForecast()
+    // getForecast()
 }
 
 init()
