@@ -6,7 +6,7 @@ var lang = 'en'
 var units = 'imperial'
 
 function getApi() {
-    var requestUrl = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&lang=${lang}&units=${units}`;
+    var requestUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&lang=${lang}&units=${units}`;
   
     fetch(requestUrl)
         .then(function (response) {
