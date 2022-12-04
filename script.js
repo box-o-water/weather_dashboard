@@ -1,4 +1,4 @@
-const apiKey = '163a9b550e5a84d073437283547bd3e1'
+const key = '163a9b550e5a84d073437283547bd3e1'
 
 var lat = 44.979530
 var lon = -93.235190
