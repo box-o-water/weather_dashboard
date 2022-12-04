@@ -8,7 +8,7 @@ var units = 'imperial'
 var listEL = document.getElementById("myData")
 
 function getApi() {
-    var requestUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&lang=${lang}&units=${units}`;
+    var requestUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&lang=${lang}&units=${units}`;
   
     fetch(requestUrl)
         .then(function (response) {
@@ -21,7 +21,13 @@ function getApi() {
                 // var listItem = someArray[i].dt_txt;
                 // console.log(listItem)
                 var listItem = document.createElement("li");
-                listItem.textContent = someArray[i].dt_txt;
+
+                listItem.textContent = new Date(someArray[i].dt*1000);
+
+                // when have limited to 5 days and not 5 3-hour sections, to convert to yyyy-mm-dd
+                // var date = new Date(someArray[i].dt*1000);
+                // listItem.textContent = date.toISOString().split('T')[0]
+
                 console.log(listItem)
                 listEL.appendChild(listItem);
             }
