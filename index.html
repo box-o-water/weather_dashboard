@@ -8,7 +8,19 @@
 </head>
 <body>
     <p>Open the console to see the weather near the University of Minnesota</p>
-    <div id="myData"></div>
+
+    <form class="">
+        <label for="search">Search City:</label>
+        <input type="text" name="search" id="search" placeholder="enter city">
+        <button id="submit-btn">Submit</button>
+    </form>
+
+    <ul id="citiesList"></ul>
+
+    <div id="current">Current Weather</div>
+
+    <div id="forecast">5 Day Forecast</div>
+
     <script src="script.js"></script>
 </body>
 </html>
