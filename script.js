@@ -1,7 +1,7 @@
+// TODO: figure out how to set this up with a new key as a secret in github or something
 const key = '163a9b550e5a84d073437283547bd3e1'
 var searchCity = ""
-var lat = 44.979530
-var lon = -93.235190
+
 var lang = 'en'
 var units = 'imperial'
 
@@ -26,19 +26,20 @@ submitBtn.addEventListener("click", function(event) {
     cities.push(city)
     console.log("cities: ", cities);
     localStorage.setItem("cities", JSON.stringify(cities));
-    // clearRenderedCitiesHTML();
+
     renderCities();
     getCurrent();
 });
 
-// The clearRenderedCitiesHTML function clears the existing rendered HTML list in preparationto be repopulated with the new rendered list
-function clearRenderedCitiesHTML() {
-    console.log("clearing rendered cities from HTML");
+// The clearHTML function clears the existing rendered city HTML in preparation to be repopulated with the new city
+function clearCityHTML() {
+    console.log("clearing rendered current city from HTML");
 
-    var citiesList = document.getElementById("citiesList");
-    console.log("before clear: ", citiesList.innerHTML);
-    citiesList.innerHTML = "";
-    console.log("after clear: ", citiesList.innerHTML);
+    var current = document.getElementById("current");
+    current.innerHTML = "";
+
+    var forecast = document.getElementById("forecast");
+    forecast.innerHTML = "";
 }
 
 // The renderCities function renders cities from local storage to HTML list elements
@@ -67,47 +68,55 @@ function renderCities() {
 function getCurrent() {
     console.log("getCurrent")
 
+    clearCityHTML()
+
     var current = document.getElementById("current")
 
-    var requestUrl= `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${key}&lang=${lang}&units=${units}`;
+    var requestUrlCurrent= `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${key}&lang=${lang}&units=${units}`;
   
-    fetch(requestUrl)
+    fetch(requestUrlCurrent)
         .then(function (response) {
             return response.json();
         })
         .then(function (data) {
             console.log(data)
-            var someCity = data.name;
-            lat = data.coord.lat;
-            lon = data.coord.lon;
+            var cityName = "City: " + data.name;
+            var cityTemp = "Temp: " + data.main.temp + " fahrenheit";
+            var cityWind = "Wind: " + data.wind.speed + "mph";
+            var cityHumidity = "Humidity: " + data.main.humidity + "%";
+            var lat = data.coord.lat;
+            var lon = data.coord.lon;
+
+            getForecast(lat, lon)
+
             temp = data.main.temp;
 
-            console.log(lat)
-            console.log(lon)
-
                 var listItem = document.createElement("li");
-                listItem.textContent = someCity;
+                listItem.textContent = cityName;
                 current.appendChild(listItem);
 
                 listItem = document.createElement("li");
-                listItem.textContent = lat;
+                listItem.textContent = cityTemp;
                 current.appendChild(listItem);
 
                 listItem = document.createElement("li");
-                listItem.textContent = lon;
+                listItem.textContent = cityWind;
                 current.appendChild(listItem);
 
                 listItem = document.createElement("li");
-                listItem.textContent = temp;
+                listItem.textContent = cityHumidity;
                 current.appendChild(listItem);
 
+                // listItem = document.createElement("li");
+                // listItem.textContent = weatherIconUrl;
+                // current.appendChild(listItem);
         })
         .catch(function (error){
             console.log(error)
         })
 };
 
-function getForecast() {
+function getForecast(lat, lon) {
     console.log("getForecast")
 
     var forecast = document.getElementById("forecast")
@@ -128,7 +137,8 @@ function getForecast() {
 
                 listItem.textContent = new Date(data.list[i].dt*1000) + " " + "temp: " + data.list[i].main.temp;
 
-                // when have limited to 5 days and not 5 3-hour sections, to convert to yyyy-mm-dd
+                // TODO figure out how to grab 5 days, not 5 3-hour windows
+                // when have limited, use similar to convert to yyyy-mm-dd or look into using dayjs
                 // var date = new Date(someArray[i].dt*1000);
                 // listItem.textContent = date.toISOString().split('T')[0]
 
@@ -143,8 +153,7 @@ function getForecast() {
 };
 
 function init() {
-    getCurrent()
-    getForecast()
+    console.log("initialize app")
 }
 
 init()
