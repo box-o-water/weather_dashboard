@@ -9,6 +9,11 @@ To view the deployed website, click [here](https://box-o-water.github.io/weather
 ## Current Status
 
 * **This application is a work in progress.** 
+* all city buttons will only load the first city's info
+* the api call brings back 5 3-hour windows, not 5 days
+* the date format is bad are gross
+* need to add styling
+* need to add more comments
 
 ## Our Task
 

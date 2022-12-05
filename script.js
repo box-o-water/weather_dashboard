@@ -8,30 +8,29 @@ var units = 'imperial'
 var searchInput = document.getElementById("search");
 var submitBtn = document.getElementById("submit-btn");
 
+var cities = [];
+
 submitBtn.addEventListener("click", function(event) {
     event.preventDefault();
     console.log("submit button");
-
-    var cities = [];
 
     var city = {
         city: searchInput.value.trim(),
     };
 
     searchCity = city.city
-    console.log("searchCity: ", searchCity);
+    console.log("searchCity:", searchCity);
 
     searchInput.value = "";
 
     cities.push(city)
-    console.log("cities: ", cities);
     localStorage.setItem("cities", JSON.stringify(cities));
 
     renderCities();
     getCurrent();
 });
 
-// The clearHTML function clears the existing rendered city HTML in preparation to be repopulated with the new city
+// The clearCityHTML function clears the existing rendered city HTML in preparation to be repopulated with the new city
 function clearCityHTML() {
     console.log("clearing rendered current city from HTML");
 
@@ -42,10 +41,19 @@ function clearCityHTML() {
     forecast.innerHTML = "";
 }
 
+// The clearCityListHTML function clears the existing rendered city button list HTML in preparation to be repopulated with the new list
+function clearCityListHTML() {
+    console.log("clearing rendered current city list from HTML");
+
+    var citiesList = document.getElementById("cities-list");
+    citiesList.innerHTML = "";
+}
+
 // The renderCities function renders cities from local storage to HTML list elements
 function renderCities() {
     console.log("rendering cities, if any");
 
+    clearCityListHTML()
     var storedCities = [];
 
     storedCities = JSON.parse(localStorage.getItem("cities"));
@@ -54,15 +62,24 @@ function renderCities() {
 
         for (var i = 0; i < storedCities.length; i++) {
 
-        var li = document.createElement("li");
+            var btn = document.createElement("button");
 
-        li.textContent = storedCities[i].city
+            btn.textContent = storedCities[i].city
 
-        var ol = document.getElementById("citiesList");
+            btn.setAttribute("class", "city-btn");
+            btn.setAttribute("onclick", "passCityButton()")
 
-        ol.appendChild(li);
+            var citiesList = document.getElementById("cities-list");
+
+            citiesList.appendChild(btn);
         }
     }
+}
+
+function passCityButton() {
+    searchCity = this.document.querySelector(".city-btn").textContent
+    console.log("city name:", searchCity);
+    getCurrent()
 }
 
 function getCurrent() {
@@ -79,37 +96,37 @@ function getCurrent() {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
             var cityName = "City: " + data.name;
             var cityTemp = "Temp: " + data.main.temp + " fahrenheit";
             var cityWind = "Wind: " + data.wind.speed + "mph";
             var cityHumidity = "Humidity: " + data.main.humidity + "%";
+            var cityIcon = data.weather[0].icon;
+            var cityIconUrl = "http://openweathermap.org/img/w/" + cityIcon + ".png";
             var lat = data.coord.lat;
             var lon = data.coord.lon;
 
             getForecast(lat, lon)
 
-            temp = data.main.temp;
+            var listItem = document.createElement("li");
+            listItem.textContent = cityName;
+            current.appendChild(listItem);
 
-                var listItem = document.createElement("li");
-                listItem.textContent = cityName;
-                current.appendChild(listItem);
+            listItem = document.createElement("li");
+            listItem.textContent = cityTemp;
+            current.appendChild(listItem);
 
-                listItem = document.createElement("li");
-                listItem.textContent = cityTemp;
-                current.appendChild(listItem);
+            listItem = document.createElement("li");
+            listItem.textContent = cityWind;
+            current.appendChild(listItem);
 
-                listItem = document.createElement("li");
-                listItem.textContent = cityWind;
-                current.appendChild(listItem);
+            listItem = document.createElement("li");
+            listItem.textContent = cityHumidity;
+            current.appendChild(listItem);
 
-                listItem = document.createElement("li");
-                listItem.textContent = cityHumidity;
-                current.appendChild(listItem);
+            var imgItem = document.createElement("img");
+            imgItem.setAttribute("src", cityIconUrl);
+            current.appendChild(imgItem);
 
-                // listItem = document.createElement("li");
-                // listItem.textContent = weatherIconUrl;
-                // current.appendChild(listItem);
         })
         .catch(function (error){
             console.log(error)
@@ -128,23 +145,48 @@ function getForecast(lat, lon) {
             return response.json();
         })
         .then(function (data) {
-            console.log(data)
 
             for (var i = 0; i < 5; i++) {
-                // var listItem = someArray[i].dt_txt;
-                // console.log(listItem)
-                var listItem = document.createElement("li");
 
-                listItem.textContent = new Date(data.list[i].dt*1000) + " " + "temp: " + data.list[i].main.temp;
+                var cityDate = new Date(data.list[i].dt*1000);
+                var cityTemp = "Temp: " + data.list[i].main.temp + " fahrenheit";
+                var cityWind = "Wind: " + data.list[i].wind.speed + "mph";
+                var cityHumidity = "Humidity: " + data.list[i].main.humidity + "%";
+                var cityIcon = data.list[i].weather[0].icon;
+                var cityIconUrl = "http://openweathermap.org/img/w/" + cityIcon + ".png";
+
+                var listItem = document.createElement("li");
+                listItem.textContent = cityDate
+                forecast.appendChild(listItem);
+
+                listItem = document.createElement("li");
+                listItem.textContent = cityTemp;
+                forecast.appendChild(listItem);
+
+                listItem = document.createElement("li");
+                listItem.textContent = cityWind;
+                forecast.appendChild(listItem);
+
+                listItem = document.createElement("li");
+                listItem.textContent = cityHumidity;
+                forecast.appendChild(listItem);
+
+                var imgItem = document.createElement("img");
+                imgItem.setAttribute("src", cityIconUrl);
+                current.appendChild(imgItem);
+
+                // var listItem = document.createElement("li");
+
+                // listItem.textContent = new Date(data.list[i].dt*1000) + " " + "temp: " + data.list[i].main.temp;
 
                 // TODO figure out how to grab 5 days, not 5 3-hour windows
                 // when have limited, use similar to convert to yyyy-mm-dd or look into using dayjs
                 // var date = new Date(someArray[i].dt*1000);
                 // listItem.textContent = date.toISOString().split('T')[0]
 
-                console.log(listItem)
-                forecast.appendChild(listItem);
-                console.log(forecast.innerHTML)
+                // console.log(listItem)
+                // forecast.appendChild(listItem);
+                // console.log(forecast.innerHTML)
             }
         })
         .catch(function (error){
