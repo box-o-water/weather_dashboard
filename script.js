@@ -1,5 +1,5 @@
 // TODO: figure out how to set this up with a new key as a secret in github or something
-const key = '163a9b550e5a84d073437283547bd3e1'
+const key = '5a295bb52d6491ec7ad2bf69e969e409'
 var searchCity = ""
 
 var lang = 'en'
@@ -10,27 +10,30 @@ var submitBtn = document.getElementById("submit-btn");
 
 var cities = [];
 
+// The submitBtn listener adds the search city to local storage
+// and calls functions to get the current weather and render the search history
 submitBtn.addEventListener("click", function(event) {
     event.preventDefault();
     console.log("submit button");
 
-    var city = {
-        city: searchInput.value.trim(),
-    };
-
-    searchCity = city.city
+    searchCity = searchInput.value.trim()
     console.log("searchCity:", searchCity);
 
     searchInput.value = "";
 
-    cities.push(city)
+    // prevent adding duplicate city
+    if (!cities.includes(searchCity)) {
+        cities.push(searchCity)
+    }
+
     localStorage.setItem("cities", JSON.stringify(cities));
 
     renderCities();
     getCurrent();
 });
 
-// The clearCityHTML function clears the existing rendered city HTML in preparation to be repopulated with the new city
+// The clearCityHTML function clears the existing rendered city HTML
+// in preparation to be repopulated with the new city
 function clearCityHTML() {
     console.log("clearing rendered current city from HTML");
 
@@ -41,7 +44,8 @@ function clearCityHTML() {
     forecast.innerHTML = "";
 }
 
-// The clearCityListHTML function clears the existing rendered city button list HTML in preparation to be repopulated with the new list
+// The clearCityListHTML function clears the existing rendered city button list HTML
+// in preparation to be repopulated with the new list
 function clearCityListHTML() {
     console.log("clearing rendered current city list from HTML");
 
@@ -64,22 +68,19 @@ function renderCities() {
 
             var btn = document.createElement("button");
 
-            btn.textContent = storedCities[i].city
+            btn.textContent = storedCities[i]
 
-            btn.setAttribute("class", "city-btn");
-            btn.setAttribute("onclick", "passCityButton()")
+            btn.addEventListener("click", function () {
+                console.log(this.textContent);
+                searchCity = this.textContent;
+                getCurrent()
+            })
 
             var citiesList = document.getElementById("cities-list");
 
             citiesList.appendChild(btn);
         }
     }
-}
-
-function passCityButton() {
-    searchCity = this.document.querySelector(".city-btn").textContent
-    console.log("city name:", searchCity);
-    getCurrent()
 }
 
 function getCurrent() {
