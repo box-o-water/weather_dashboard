@@ -5,21 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>weather dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
+    <div class="container is-fluid">
+        <div class="columns">
 
-    <form class="">
-        <label for="search">Search City:</label>
-        <input type="text" name="search" id="search" placeholder="enter city">
-        <button id="submit-btn">Submit</button>
-    </form>
+            <!-- Search area -->
+            <div class="column is-one-fifth" id="search-area">
+                <div class="card">
+                    <div class="column is-size-5 has-text-weight-semibold">Search for City</div>
+                    <form class="card">
+                        <input type="text" name="search" id="search" placeholder="enter city">
+                        <button id="submit-btn">Submit</button>
+                    </form>
+                    <ul class="column is-4-desktop" id="cities-list"></ul>
+                </div>
+            </div>
 
-    <ul id="cities-list"></ul>
-
-    <div id="current">Current Weather</div>
-
-    <div id="forecast">5 Day Forecast</div>
-
+            <!-- Weather area -->
+            <div class="column" id="weather-area">
+                <div class="column is-flex is-size-5 has-text-weight-semibold">Current Weather</div>
+                <ul class="column card no-bullets is-hidden" id="current"></ul>
+                <div class="column is-flex is-size-5 has-text-weight-semibold">5 Day Forecast</div>
+                <div class="card is-flex" id="forecast"></div>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

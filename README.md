@@ -6,14 +6,12 @@ A weather app that shows a 5-day forecast for the selected city. No starter code
 
 To view the deployed website, click [here](https://box-o-water.github.io/weather_dashboard/).
 
-## Current Status
+![preview](assets/images/weather_dashboard_preview.png)
 
-* **This application is a work in progress.** 
-* the api call brings back 5 3-hour windows, not 5 days
-* apikey: obfuscate or set it up as a gh secret
-* the date format is gross
-* need to add styling
-* need to add more comments
+## Future Enhancements
+
+* the free api forecast call brings back 5 days worth of 3-hour windows, therefore making it gross to get a daily forecast; as this weather app is reasonably basic and short-term and as the apikey is currently visible, elected to NOT provide financial information to use one of api options which would have provided a daily forecast
+* replace plain text apikey with a secure solution
 * add ability to pick correct city if duplicates exist (zip; city, state; provide a list; etc)
 
 ## Our Task
