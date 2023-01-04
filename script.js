@@ -7,6 +7,7 @@ var units = 'imperial'
 
 var searchInput = document.getElementById("search");
 var submitBtn = document.getElementById("submit-btn");
+var clearBtn = document.getElementById("clear-btn");
 var current = document.getElementById("current");
 
 var cities = [];
@@ -81,9 +82,17 @@ function renderCities() {
             var citiesList = document.getElementById("cities-list");
 
             citiesList.appendChild(btn);
+
+            clearBtn.classList.remove("is-hidden");
         }
     }
 }
+
+clearBtn.addEventListener("click", function() {
+    console.log("clear local storage");
+    localStorage.clear(cities)
+    location.reload();
+});
 
 // The getCurrent function will get current weather data from the selected city.
 // render the current weather elements to the site,
@@ -94,6 +103,7 @@ function getCurrent() {
     clearCityHTML()
 
     var current = document.getElementById("current")
+    current.classList.remove("is-hidden");
 
     var requestUrlCurrent= `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${key}&lang=${lang}&units=${units}`;
   
@@ -105,7 +115,7 @@ function getCurrent() {
             var cityDateE = new Date(data.dt*1000);
             var cityDate = cityDateE.toDateString();
             var cityName = data.name;
-            var cityTemp = "Temp: " + data.main.temp + " fahrenheit";
+            var cityTemp = "Temp: " + data.main.temp + "F";
             var cityWind = "Wind: " + data.wind.speed + "mph";
             var cityHumidity = "Humidity: " + data.main.humidity + "%";
             var cityIcon = data.weather[0].icon;
@@ -205,6 +215,7 @@ function getForecast(lat, lon) {
 
 function init() {
     console.log("initialize app")
+    renderCities()
 }
 
 init()
