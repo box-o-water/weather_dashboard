@@ -10,7 +10,7 @@ var submitBtn = document.getElementById("submit-btn");
 var clearBtn = document.getElementById("clear-btn");
 var current = document.getElementById("current");
 
-var cities = [];
+var cities = JSON.parse(localStorage.getItem("cities")) || [];
 
 // The submitBtn listener adds the search city to local storage
 // and calls functions to get the current weather and render the search history.
@@ -62,29 +62,23 @@ function renderCities() {
     console.log("rendering cities, if any");
 
     clearCityListHTML()
-    var storedCities = [];
 
-    storedCities = JSON.parse(localStorage.getItem("cities"));
+    for (var i = 0; i < cities.length; i++) {
 
-    if (storedCities !== null) {
+        var btn = document.createElement("button");
+        btn.setAttribute("class", "button")
+        btn.textContent = cities[i]
+        btn.addEventListener("click", function () {
+            console.log(this.textContent);
+            searchCity = this.textContent;
+            getCurrent()
+        })
 
-        for (var i = 0; i < storedCities.length; i++) {
+        var citiesList = document.getElementById("cities-list");
 
-            var btn = document.createElement("button");
-            btn.setAttribute("class", "button")
-            btn.textContent = storedCities[i]
-            btn.addEventListener("click", function () {
-                console.log(this.textContent);
-                searchCity = this.textContent;
-                getCurrent()
-            })
+        citiesList.appendChild(btn);
 
-            var citiesList = document.getElementById("cities-list");
-
-            citiesList.appendChild(btn);
-
-            clearBtn.classList.remove("is-hidden");
-        }
+        clearBtn.classList.remove("is-hidden");
     }
 }
 
@@ -215,6 +209,7 @@ function getForecast(lat, lon) {
 
 function init() {
     console.log("initialize app")
+    console.log("cities in init: ", cities);
     renderCities()
 }
 
